@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+  padding: 20px;
+  background: #0f0f1a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#root {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app {
+  text-align: center;
+}
+
+.app h1 {
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.current-time-display {
+  color: #4a90d9;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
