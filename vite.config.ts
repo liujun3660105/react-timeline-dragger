@@ -12,7 +12,14 @@ export default defineConfig(({ mode }) => ({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      // 明确指定外部依赖
+      external: [
+        /^react$/,
+        /^react-dom$/,
+        /^react-dom\/client$/,
+        /^react\/jsx-runtime$/,
+        /^react\/jsxs-runtime$/,
+      ],
       output: {
         globals: {
           react: 'React',
@@ -23,5 +30,8 @@ export default defineConfig(({ mode }) => ({
     },
     cssCodeSplit: false,
     copyPublicDir: false,
+    // 减小打包体积
+    minify: false,
+    sourcemap: true,
   } : {},
 }));

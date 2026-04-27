@@ -25,8 +25,9 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(800);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStartX, setDragStartX] = useState(0);
-  const [dragStartTime, setDragStartTime] = useState(currentTime);
+  // 使用 ref 存储拖拽初始值，避免闭包问题
+  const dragStartXRef = useRef(0);
+  const dragStartTimeRef = useRef(currentTime);
 
   // 监听容器宽度变化
   useEffect(() => {
@@ -116,25 +117,25 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
     // 播放状态下禁止拖动
     if (isPlaying) return;
     setIsDragging(true);
-    setDragStartX(e.clientX);
-    setDragStartTime(currentTime);
+    dragStartXRef.current = e.clientX;
+    dragStartTimeRef.current = currentTime;
   }, [isPlaying, currentTime]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging || !containerRef.current) return;
 
     const containerWidth = containerRef.current.offsetWidth;
-    const deltaX = e.clientX - dragStartX;
+    const deltaX = e.clientX - dragStartXRef.current;
     // 计算拖动偏移对应的时间变化
     const deltaTimeMs = (deltaX / containerWidth) * visibleDuration;
-    const newTime = new Date(dragStartTime.getTime() - deltaTimeMs);
+    const newTime = new Date(dragStartTimeRef.current.getTime() - deltaTimeMs);
 
     // 在startTime和endTime之间限制
     const clampedTime = new Date(
       Math.max(startTime.getTime(), Math.min(endTime.getTime(), newTime.getTime()))
     );
     onTimeChange(clampedTime);
-  }, [isDragging, dragStartX, dragStartTime, visibleDuration, startTime, endTime, onTimeChange]);
+  }, [isDragging, visibleDuration, startTime, endTime, onTimeChange]);
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
@@ -156,9 +157,9 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
       <div className="slider-viewport">
         {/* 时间刻度 */}
         <div className="slider-ticks">
-          {ticks.map((tick, index) => (
+          {ticks.map((tick) => (
             <div
-              key={index}
+              key={tick.time.getTime()}
               className="slider-tick"
               style={{ left: `${tick.position}%` }}
             >

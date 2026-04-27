@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 
 export interface DatePickerProps {
   value: Date;
   onChange: (date: Date) => void;
   minDate?: Date;
   maxDate?: Date;
+  /** 是否禁用（播放时禁用） */
+  disabled?: boolean;
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({
@@ -12,24 +14,30 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   onChange,
   minDate,
   maxDate,
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [viewDate, setViewDate] = useState(() => new Date(value));
   const containerRef = useRef<HTMLDivElement>(null);
   const isOpenRef = useRef(isOpen);
+  const viewDateRef = useRef(viewDate);
 
-  // 同步isOpen ref
+  // 同步ref
   useEffect(() => {
     isOpenRef.current = isOpen;
   }, [isOpen]);
+
+  useEffect(() => {
+    viewDateRef.current = viewDate;
+  }, [viewDate]);
 
   // 当弹窗打开且value跨月时，同步viewDate
   useEffect(() => {
     if (isOpenRef.current) {
       const valueYear = value.getFullYear();
       const valueMonth = value.getMonth();
-      const viewYear = viewDate.getFullYear();
-      const viewMonth = viewDate.getMonth();
+      const viewYear = viewDateRef.current.getFullYear();
+      const viewMonth = viewDateRef.current.getMonth();
       
       if (valueYear !== viewYear || valueMonth !== viewMonth) {
         setViewDate(new Date(value));
@@ -41,17 +49,19 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   const month = viewDate.getMonth();
   const day = value.getDate();
 
-  // 生成月份天数
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayOfMonth = new Date(year, month, 1).getDay();
-
-  const days: (number | null)[] = [];
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    days.push(null);
-  }
-  for (let i = 1; i <= daysInMonth; i++) {
-    days.push(i);
-  }
+  // 使用 useMemo 缓存 days 数组
+  const days = useMemo(() => {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    const result: (number | null)[] = [];
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      result.push(null);
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      result.push(i);
+    }
+    return result;
+  }, [year, month]);
 
   const prevMonth = () => {
     setViewDate(new Date(year, month - 1, 1));
@@ -94,7 +104,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
   return (
     <div className="date-picker" ref={containerRef}>
-      <button className="date-picker-trigger" onClick={() => setIsOpen(!isOpen)}>
+      <button
+        className="date-picker-trigger"
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        disabled={disabled}
+      >
         📅 {value.toLocaleDateString('zh-CN')}
       </button>
       {isOpen && (

@@ -13,6 +13,8 @@ export interface TimelineProps {
   onAutoPlayChange?: (isPlaying: boolean) => void;
   /** 播放速度倍率 */
   playbackSpeed?: number;
+  /** 倍速播放变化回调 */
+  onPlaybackSpeedChange?: (speed: number) => void;
   /** 时间轴高度 */
   height?: number;
   /** 自定义样式 */
@@ -34,6 +36,6 @@ export interface TimelineRef {
   play: () => void;
   /** 暂停播放 */
   pause: () => void;
-  /** 当前播放状态 */
-  isPlaying: boolean;
+  /** 当前播放状态（getter，确保返回最新值） */
+  get isPlaying(): boolean;
 }

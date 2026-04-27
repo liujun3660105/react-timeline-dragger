@@ -1,22 +1,32 @@
+/* 响应式字体大小 - 基于容器宽度自适应 */
 .timeline-container {
   width: 100%;
   background: #000;
   border-radius: 4px;
-  padding: 8px 12px;
+  padding: 10px 14px;
   box-sizing: border-box;
   font-family: 'Segoe UI', Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   border: 1px solid #333;
+}
+
+/* CSS 变量定义字体基准值 */
+.timeline-container {
+  --font-base: clamp(12px, 1.2vw, 16px);
+  --font-small: clamp(10px, 1vw, 13px);
+  --font-tick: clamp(8px, 0.8vw, 11px);
+  --font-large: clamp(13px, 1.3vw, 17px);
+  --font-xlarge: clamp(14px, 1.4vw, 18px);
 }
 
 /* 顶部工具栏 */
 .timeline-toolbar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  height: 28px;
+  gap: 14px;
+  height: 32px;
 }
 
 /* 日期选择器 */
@@ -30,20 +40,25 @@
   border-radius: 3px;
   color: #fff;
   cursor: pointer;
-  font-size: 12px;
-  padding: 4px 10px;
+  font-size: var(--font-base);
+  padding: 5px 12px;
   transition: background 0.2s;
 }
 
-.date-picker-trigger:hover {
+.date-picker-trigger:hover:not(:disabled) {
   background: #333;
+}
+
+.date-picker-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* 播放控制按钮 */
 .playback-controls {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .control-btn {
@@ -52,8 +67,8 @@
   border-radius: 3px;
   color: #ccc;
   cursor: pointer;
-  font-size: 11px;
-  padding: 4px 8px;
+  font-size: var(--font-base);
+  padding: 5px 10px;
   transition: all 0.2s;
 }
 
@@ -70,8 +85,8 @@
 .play-btn {
   background: #2a5a8a;
   border-color: #3a7ab8;
-  font-size: 12px;
-  padding: 4px 12px;
+  font-size: var(--font-large);
+  padding: 5px 14px;
 }
 
 .play-btn:hover {
@@ -84,7 +99,7 @@
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 /* 倍速控制 */
@@ -96,7 +111,7 @@
 
 .speed-label {
   color: #888;
-  font-size: 11px;
+  font-size: var(--font-small);
 }
 
 .speed-select {
@@ -105,8 +120,8 @@
   border-radius: 3px;
   color: #fff;
   cursor: pointer;
-  font-size: 11px;
-  padding: 3px 6px;
+  font-size: var(--font-small);
+  padding: 4px 8px;
 }
 
 .speed-select:focus {
@@ -122,7 +137,7 @@
 
 .duration-label {
   color: #888;
-  font-size: 11px;
+  font-size: var(--font-small);
 }
 
 .duration-select {
@@ -131,8 +146,8 @@
   border-radius: 3px;
   color: #fff;
   cursor: pointer;
-  font-size: 11px;
-  padding: 3px 6px;
+  font-size: var(--font-small);
+  padding: 4px 8px;
 }
 
 .duration-select:focus {
@@ -142,7 +157,7 @@
 /* 时间滑块 */
 .timeline-slider {
   position: relative;
-  height: 32px;
+  height: clamp(36px, 4vw, 50px);
   cursor: grab;
   user-select: none;
   background: #0a0a0a;
@@ -187,15 +202,15 @@
 }
 
 .tick-line.major {
-  height: 10px;
+  height: clamp(10px, 1.2vw, 14px);
   background: #888;
 }
 
 .tick-label {
   position: absolute;
-  top: 2px;
+  top: 3px;
   color: #888;
-  font-size: 9px;
+  font-size: var(--font-tick);
   white-space: nowrap;
   text-align: center;
   /* 确保label居中在刻度线位置 */
@@ -222,7 +237,7 @@
   left: 50%;
   transform: translateX(-50%);
   color: #fff;
-  font-size: 13px;
+  font-size: var(--font-large);
   font-family: 'Courier New', monospace;
   font-weight: bold;
   white-space: nowrap;
@@ -231,24 +246,24 @@
 /* 日期选择弹窗 */
 .date-picker-popup {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   left: 0;
   background: #1a1a1a;
   border: 1px solid #444;
   border-radius: 6px;
-  padding: 12px;
+  padding: 14px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   z-index: 100;
-  min-width: 240px;
+  min-width: 260px;
 }
 
 .picker-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   color: #fff;
-  font-size: 13px;
+  font-size: var(--font-large);
 }
 
 .picker-header button {
@@ -257,8 +272,8 @@
   border-radius: 3px;
   color: #aaa;
   cursor: pointer;
-  font-size: 12px;
-  padding: 4px 10px;
+  font-size: var(--font-base);
+  padding: 5px 12px;
 }
 
 .picker-header button:hover {
@@ -271,14 +286,14 @@
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
   color: #666;
-  font-size: 10px;
-  margin-bottom: 6px;
+  font-size: var(--font-small);
+  margin-bottom: 8px;
 }
 
 .picker-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 3px;
 }
 
 .picker-days button {
@@ -286,8 +301,8 @@
   border: none;
   color: #ccc;
   cursor: pointer;
-  font-size: 12px;
-  padding: 5px;
+  font-size: var(--font-base);
+  padding: 6px;
   border-radius: 3px;
   transition: background 0.2s;
 }
