@@ -1,6 +1,6 @@
 # React Timeline Dragger
 
-一个类 Cesium 风格的 React 时间轴组件，支持拖拽定位、播放控制和日期切换。
+React 时间轴组件，支持拖拽定位、播放控制和日期切换。
 
 ## 特性
 

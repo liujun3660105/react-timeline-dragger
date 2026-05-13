@@ -11,6 +11,8 @@ export interface TimelineSliderProps {
   formatTime?: (date: Date) => string;
   /** 是否正在播放，播放时禁止拖动 */
   isPlaying?: boolean;
+  /** 拖拽时的最大允许时间（用于 isControlByLastedTime，暂停时不允许超过当前真实时间） */
+  maxAllowedTime?: Date;
 }
 
 export const TimelineSlider: React.FC<TimelineSliderProps> = ({
@@ -21,6 +23,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
   visibleDuration = 24 * 60 * 60 * 1000,
   formatTime = (d) => d.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
   isPlaying = false,
+  maxAllowedTime,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(800);
@@ -130,9 +133,12 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
     const deltaTimeMs = (deltaX / containerWidth) * visibleDuration;
     const newTime = new Date(dragStartTimeRef.current.getTime() - deltaTimeMs);
 
-    // 在startTime和endTime之间限制
+    // 在startTime和有效最大时间之间限制（maxAllowedTime优先于endTime）
+    const effectiveMaxTime = maxAllowedTime
+      ? Math.min(endTime.getTime(), maxAllowedTime.getTime())
+      : endTime.getTime();
     const clampedTime = new Date(
-      Math.max(startTime.getTime(), Math.min(endTime.getTime(), newTime.getTime()))
+      Math.max(startTime.getTime(), Math.min(effectiveMaxTime, newTime.getTime()))
     );
     onTimeChange(clampedTime);
   }, [isDragging, visibleDuration, startTime, endTime, onTimeChange]);

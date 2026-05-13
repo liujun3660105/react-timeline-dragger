@@ -113,6 +113,7 @@ function App() {
     return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
   };
   function onTimeChange(time:Date){
+    console.log(dayjs(time).format('YYYY-MM-DD HH:mm:ss'))
     setCurrentTime(time)
   }
 
@@ -184,12 +185,13 @@ function App() {
       <Timeline
         // startTime={startTime}
         // endTime={endTime}
-        currentTime={currentTime}
+        defaultCurrentTime={currentTime}
         onTimeChange={onTimeChange}
         autoPlay={true}
         playbackSpeed={1}
+        isControlByLastedTime = {true}
         formatTime={formatTime}
-        playbackInterval={1000}
+        // playbackInterval={1000}
         height={100}
         // onAutoPlayChange={setPlay}
       />

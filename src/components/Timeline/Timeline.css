@@ -82,6 +82,19 @@
   background: #444;
 }
 
+.control-btn:disabled {
+  /* opacity: 0.4; */
+  cursor: not-allowed;
+  border-color: #333;
+  color: #555;
+}
+
+.control-btn:hover:disabled {
+  background: transparent;
+  border-color: #333;
+  color: #555;
+}
+
 .play-btn {
   background: #2a5a8a;
   border-color: #3a7ab8;

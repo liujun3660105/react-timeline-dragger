@@ -1,6 +1,6 @@
 {
   "name": "react-timeline-dragger",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "A React timeline component with Cesium-like time navigation, drag-to-seek, playback controls, and auto-play features",
   "type": "module",
   "main": "./dist/index.umd.js",
